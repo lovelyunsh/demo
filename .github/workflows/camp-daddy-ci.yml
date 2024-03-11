@@ -19,7 +19,8 @@ jobs:
 #          echo ${{ secrets.ENV }} > .env
       - name: .env 파일 생성
         run: |
-          jq -r 'to_entries|map("\(.key)=\(.value|tostring)")|.[]' <<< "$SECRETS_CONTEXT" > .env
+          jq -r 'to_entries|map(select(.key!="AWS_SSH_KEY")|"\(.key)=\(.value|tostring)")|.[]' <<< "$SECRETS_CONTEXT" > .env
+          cat .env
         env:
           SECRETS_CONTEXT: ${{ toJson(secrets) }}
 
